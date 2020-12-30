@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="produccion" model="l10n_ec_sri.ambiente">
+        <field name="name">Ambiente de producción</field>
+        <field name="ambiente">2</field>
+        <field name="recepcioncomprobantes">https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl</field>
+        <field name="autorizacioncomprobantes">https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl</field>
+    </record>
+    <record id="pruebas" model="l10n_ec_sri.ambiente">
+        <field name="name">Ambiente de pruebas</field>
+        <field name="ambiente">1</field>
+        <field name="recepcioncomprobantes">https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl</field>
+        <field name="autorizacioncomprobantes">https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl</field>
+    </record>
+
+</odoo>

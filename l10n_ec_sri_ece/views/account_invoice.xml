@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="invoice_tree" model="ir.ui.view">
+        <field name="name">prepare_taxes_account.invoice.tree</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="l10n_ec_sri.invoice_tree_ec"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='secuencial']" position="after">
+                <field name="ce_state" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_invoice_form_ec" model="ir.ui.view">
+        <field name="name">Invoice form ec inherit</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="l10n_ec_sri.view_invoice_form_ec"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='button_anular_secuencial']" position="before">
+                <field name="ce_state" invisible="1"/>
+                <button name="button_anular_secuencial"
+                        string="Anular Secuencial"
+                        type="object"
+                        confirm="¿Esta seguro de anular el secuencial de la factura o nota de credito?"
+                        attrs="{'invisible':
+                            [
+                                '|',
+                                ('secuencial','=',False),
+                                ('ce_state','not in',('AUTORIZADO','DEVUELTA','NO AUTORIZADO','RECHAZADA'))
+                            ]
+                        }"
+                        />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="invoice_form" model="ir.ui.view">
+        <field name="name">ece client invoice form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_invoice_sent']" position="replace">
+                <button
+                    name="action_invoice_sent"
+                    string="Enviar por correo"
+                    type="object"
+                    class="btn-primary"
+                    />
+            </xpath>
+            <field name="payment_term_id" position="after">
+                <field name="ce_state" invisible="1"/>
+                <field
+                     name="factura_electronica_id"
+                     attrs="{'invisible': [('factura_electronica_id', '=', False)]}"
+                />
+                <field
+                    name="retencion_electronica_id"
+                    attrs="{'invisible': [('retencion_electronica_id', '=', False)]}"
+                />
+                <field
+                    name="nota_credito_electronica_id"
+                    attrs="{'invisible': [('nota_credito_electronica_id', '=', False)]}"
+                    />
+                <button
+                    name="button_corregir_documentos_electronicos"
+                    string="CORREGIR DOCUMENTO ELECTRONICO"
+                    attrs="{
+                        'invisible':[
+                            ('ce_state', 'not in', ('DEVUELTA', 'NO AUTORIZADO', 'RECHAZADA'))
+                        ]}"
+                    type="object"
+                    class="oe_inline oe_link"
+                    />
+                <button
+                    name="send_de_backend"
+                    string="AUTORIZAR y/o VERIFICAR"
+                    attrs="{
+                        'invisible':[
+                            ('ce_state', 'not in', ('NO ENVIADO', 'RECIBIDA', 'EN PROCESO'))
+                        ]}"
+                    type="object"
+                    class="oe_inline oe_link"
+                    />
+            </field>
+        </field>
+    </record>
+
+    <record id="invoice_supplier_tree" model="ir.ui.view">
+        <field name="name">prepare_taxes_account.invoice supplier form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="l10n_ec_sri.invoice_supplier_tree_ec"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='secuencial']" position="after">
+                <field name="ce_state"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_invoice_supplier_form_ec" model="ir.ui.view">
+        <field name="name">Invoice supplier form ec inherit</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="l10n_ec_sri.view_invoice_supplier_form_ec"/>
+        <field name="arch" type="xml">
+            <data>
+                <button name="button_anular_secuencial" position="replace">
+                    <field name="ce_state" invisible="1"/>
+                    <button
+                        name="button_anular_secuencial"
+                        string="Anular Secuencial"
+                        type="object"
+                        confirm="¿Esta seguro de anular el secuencial de la retención?"
+                        attrs="{'invisible':
+                            [
+                                '|',
+                                ('secretencion1','=',False),
+                                ('ce_state','not in',('AUTORIZADO','DEVUELTA','NO AUTORIZADO','RECHAZADA'))
+                            ]
+                        }"
+                        />
+                </button>
+            </data>
+        </field>
+    </record>
+    
+
+    <record id="invoice_supplier_form" model="ir.ui.view">
+        <field name="name">prepare_taxes_account.invoice supplier form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <button
+                    name="action_invoice_sent"
+                    string="Enviar por correo"
+                    type="object"
+                    class="btn-primary"
+                    />
+            </field>
+            <field name="reference" position="after">
+                <field name="ce_state" invisible="1"/>
+                <field
+                    name="factura_electronica_id"
+                    attrs="{'invisible': [('factura_electronica_id', '=', False)]}"
+                />
+                <field
+                    name="retencion_electronica_id"
+                    attrs="{'invisible': [('retencion_electronica_id', '=', False)]}"
+                />
+                <button
+                    name="button_corregir_documentos_electronicos"
+                    string="CORREGIR DOCUMENTO ELECTRONICO"
+                    attrs="{
+                        'invisible':[
+                            ('ce_state', 'not in', ('DEVUELTA', 'NO AUTORIZADO', 'RECHAZADA')
+                        )]}"
+                    type="object"
+                    class="oe_inline oe_link"
+                    />
+                <button
+                    name="send_de_backend"
+                    string="AUTORIZAR y/o VERIFICAR"
+                    attrs="{
+                        'invisible':[
+                            ('ce_state', 'not in', ('NO ENVIADO', 'RECIBIDA', 'EN PROCESO')
+                        )]}"
+                    type="object"
+                    class="oe_inline oe_link"
+                    />
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">Invoice - SRI ECE Search View</field>
+        <field name="model">account.invoice</field>
+        <field name="type">search</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//filter[@name='group_by_partner_id']" position="before" >
+                    <filter name="group_by_ce_state" string="Estado SRI" context="{'group_by':'ce_state'}"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>

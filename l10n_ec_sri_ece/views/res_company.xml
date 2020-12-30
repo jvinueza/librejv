@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_company_form" model="ir.ui.view">
+        <field name="name">ece online view_company_form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Documentos electrónicos" name="ece">
+                    <group>
+                        <field name="firma_id"/>
+                        <field name="ambiente_id"/>
+                        <field name="ece_sender"/>
+                        <field name="ece_email"/>
+                        <field
+                            name="ece_cc_id"
+                            options='{"no_create_edit": True, "no_open": True, "no_quick_create": True}'
+                            />
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

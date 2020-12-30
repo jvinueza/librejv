@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="sale_retention_wizard_form_view" model="ir.ui.view">
+        <field name="name">l10n_ec_sri.sale.retention.wizard form view</field>
+        <field name="model">l10n_ec_sri.sale.retention.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Datos de la retención">
+                <sheet>
+                    <group>
+                        <field name="invoice_id" invisible="1"/>
+                        <field name="type"/>
+                        <field name="r_comprobante_id"/>
+                        <field name="fechaemiret1"/>
+                        <field name="date"
+                            attrs="{'invisible': [('type', '=', 'in_invoice')]}"
+                            />
+                        <label for="secretencion1"/>
+                        <div class="o_address_format">
+                            <field name="estabretencion1" placeholder="001" class="o_address_city"/>
+                            <field name="ptoemiretencion1" placeholder="001" class="o_address_state"/>
+                            <field name="secretencion1" placeholder="000000001" class="o_address_zip"/>
+                        </div>
+                        <field name="autretencion1" placeholder="1234567890"/>
+                    </group>
+                    <group name="retenciones" string="Retenciones">
+                        <field 
+                            name="wizard_line_ids"
+                            nolabel="1"
+                            >
+                            <tree editable="buttom">
+                                <field
+                                    name="tax_id"
+                                    options='{ "no_create_edit": True, "no_open": True, "no_quick_create": True }'
+                                    />
+                                <field
+                                    name="sustento_id"
+                                    options='{ "no_create_edit": True, "no_open": True, "no_quick_create": True }'
+                                    />
+                                <field name="base"/>
+                                <field name="amount"/>
+                                <field name="account_id"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+                <footer>
+                    <button
+                        string='Registrar retención'
+                        name="button_registrar_retencion"
+                        type="object"
+                        class="btn-primary"
+                        />
+                    <button
+                        string="Cancel"
+                        class="btn-default"
+                        special="cancel"
+                        />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <act_window
+            id="action_sale_retention_wizard"
+            name="Registrar datos de la retención"
+            res_model="l10n_ec_sri.sale.retention.wizard"
+            src_model="account.invoice"
+            view_mode="form"
+            target="new"
+    />
+</odoo>

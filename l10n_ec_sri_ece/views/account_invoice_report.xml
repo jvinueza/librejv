@@ -1,0 +1,948 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<report id="report_factura_electronica_id" model="account.invoice"
+			    string="Factura electrónica" name="l10n_ec_sri_ece.report_factura_electronica"
+			    file="Facturación electrónica" report_type="qweb-pdf" />
+		<template id="report_factura_electronica">
+			<t t-foreach="docs" t-as="o">
+				<t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
+				<div class="page">
+                    <table class="table-condensed" style="width: 100%;">
+                        <tbody>
+                            <tr>
+                                <td style="width:50%; vertical-align: top;">
+                                    <t t-if="o.company_id.logo">
+                                        <img
+                                        t-att-src="'data:image/png;base64, %s' % o.company_id.logo"
+                                        style="width:60%; height:50%; align:center;"
+                                        />
+                                    </t>
+                                    <!-- <img t-if="o.company_id.logo" t-att-src=" 'data:image/png;base64, %s' % o.company_id.logo" -->
+                                    <!-- style="max-width: 100%; height: 270px; text-aling=center; margin-top: -1.5cm;"/> -->
+                                    <br />
+                                    <strong>
+                                        <t t-esc="o.company_id.name"/>
+                                    </strong>
+                                    <br/>
+                                    <strong>DIRECCIÓN MATRIZ</strong>
+                                    <br/>
+                                    <t t-esc="o.company_id.street"/>
+                                    <t t-esc="o.company_id.street2"/>
+                                    <br/>
+                                    <strong>CONTRIBUYENTE ESPECIAL NRO: </strong>
+                                    <t t-esc="o.company_id.contribuyenteespecial"/>
+                                    <br/>
+                                    <strong>OBLIGADO A LLEVAR CONTABILIDAD: </strong>SI<br/>
+                                </td>
+                                <td style="width:50%; border: solid 1px black; vertical-align: top;">
+                                    <strong>R.U.C: </strong>
+                                    <t t-esc="o.company_id.vat"/>
+                                    <br/>
+                                    <strong>FACTURA</strong>
+                                    <br/>
+                                    <strong>Nro: </strong>
+                                    <t t-esc="o.get_sri_secuencial_completo_factura()"/>
+                                    <br/>
+                                    <strong>NÚMERO DE AUTORIZACIÓN:</strong>
+                                    <br/>
+                                    <t t-esc="o.autorizacion"/>
+                                    <br/>
+                                    <strong>FECHA Y HORA DE AUTORIZACIÓN:</strong>
+                                    <br/>
+                                    <!--<span t-field="o.fecha" t-field-options="{&quot;format&quot;: &quot;d-MM-y HH:mm&quot;}"/>
+                                        <br/>-->
+                                    <strong>AMBIENTE: </strong>
+                                    <span t-field="o.factura_electronica_id.ambiente"/>
+                                    <br/>
+                                    <strong>EMISIÓN: </strong>
+                                    <span t-field="o.factura_electronica_id.tipoemision"/>
+                                    <br/>
+                                    <strong>CLAVE DE ACCESO:</strong>
+                                    <br/>
+                                    <img style="width:100%; height: 40%" t-if="o.factura_electronica_id" t-att-src="'data:image/png;base64,%s' % o.factura_electronica_id.barcode128"/>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+					<table class="table table-condensed"
+						   style="border: 2px solid #000000;font-size:10px; border-collapse: collapse;">
+						<tr class="active">
+							<td style="border: none;">
+								<strong>Razón Social / Nombres y Apellidos</strong>
+							</td>
+							<td style="border: none;" class="text-left">
+								<span t-if="o.partner_id.name">
+									<p>
+										<strong></strong>
+										<span t-field="o.partner_id.name" />
+									</p>
+								</span>
+							</td>
+							<td style="border: none;">
+								<strong>Identificación</strong>
+							</td>
+							<td style="border: none;" class="text-left">
+								<span t-if="o.partner_id.vat">
+									<p>
+										<strong></strong>
+										<span t-field="o.partner_id.vat" />
+									</p>
+								</span>
+							</td>
+						</tr>
+						<tr class="active">
+							<td style="border: none;">
+								<strong>Fecha Emisión</strong>
+							</td>
+							<td style="border: none;" class="text-left">
+								<span t-if="o.date_invoice">
+									<p>
+										<strong></strong>
+										<span t-field="o.date_invoice" />
+									</p>
+								</span>
+							</td>
+							<td style="border: none;">
+								<strong>Fecha Expiración</strong>
+								<span t-if="o.date_due">
+									<strong></strong>
+									<span t-field="o.date_due" />
+								</span>
+							</td>
+
+							<td style="border: none;">
+                                <strong>Guía Remisión: </strong>
+                                <span t-esc="o.get_sri_secuencial_completo_guia()"/>
+							</td>
+							<td style="border: none;" class="text-left">
+
+							</td>
+						</tr>
+						<tr class="active">
+							<td style="border: none;">
+								<strong>Dirección</strong>
+							</td>
+							<td style="border: none;" colspan="3" class="text-left">
+								<span t-field="o.partner_id.street" />
+							</td>
+						</tr>
+					</table>
+
+					<div class="row">
+						<div class="col-xs-2"
+							 t-if="o.date_due and o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">
+						</div>
+						<div name="reference" class="col-xs-2" t-if="o.reference">
+						</div>
+					</div>
+
+					<!-- Is there a discount on at least one line? -->
+					<t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line_ids])" />
+                    <t t-set="display_barcode" t-value="any([l.product_id.barcode for l in o.invoice_line_ids])" />
+
+					<table class="table table-condensed"
+						   style="border: 1px solid; font-size:10px; border-collapse: collapse;">
+						<thead>
+							<tr class="active">
+								<th style="border:1px solid;">Cod. Principal</th>
+                                <t t-if="display_barcode">
+								    <th style="border:1px solid;">Cod. Auxiliar</th>
+                                </t>
+								<th style="border:1px solid;" class="text-center">Cantidad.</th>
+                                <th style="border:1px solid;" class="text-center">Unidad.</th>
+								<th style="border:1px solid;">Descripción</th>
+								<!-- <th style="border:1px solid;">Detalle adicional</th> -->
+								<th style="border:1px solid;" class="text-center">Precio Unitario</th>
+								<!-- <th style="border:1px solid;">Subsidio</th> -->
+								<!-- <th style="border:1px solid;">Precio sin Subsidio</th> -->
+								<th style="border:1px solid;">Descuento(%)</th>
+								<!-- <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">DESC.(%)</th> -->
+								<th class="text-right">Precio Total</th>
+							</tr>
+						</thead>
+						<tbody class="invoice_tbody">
+							<tr t-foreach="o.invoice_line_ids" t-as="l">
+								<td class="text-center" style="border:1px solid;">
+                                    <!-- Codigo Principal -->
+									<span t-field="l.product_id.default_code" />
+								</td>
+                                <t t-if="display_barcode">
+                                    <td class="text-center" style="border:1px solid;">
+                                        <!-- Codigo Alterno -->
+									    <span t-field="l.product_id.barcode" />
+								    </td>
+                                </t>
+								<td class="text-right" style="border:1px solid;">
+                                    <!-- Cantidad -->
+                                    <t t-esc="'{0:.2f}'.format(l.quantity).replace('.', ',')" />
+                                </td>
+                                <td class="text-center" style="border:1px solid;">
+									<span t-field="l.uom_id" groups="product.group_uom" />
+								</td>
+								<td class="text-left" style="border:1px solid;">
+									<span t-field="l.name" />
+								</td>
+                                <!-- Descripción -->
+								<!-- <td style="border:1px solid;" class="text-right"> -->
+                                <!--     <!-\- Detalle Adicional -\-> -->
+								<!-- </td> -->
+								<td class="text-right" style="border:1px solid;">
+                                    <!-- Precio Unitario -->
+									<span t-esc="'%.2f'%(l.price_unit)" />
+								</td>
+								<!-- <td class="text-right" style="border:1px solid;"> -->
+                                <!--     <!-\- Subsidio -\-> -->
+								<!-- 	<p> 0.00 </p> -->
+								<!-- </td> -->
+								<!-- <td class="text-right" style="border:1px solid;"> -->
+                                <!--     <!-\- Precio sin subsidio -\-> -->
+								<!-- 	<p> 0.00 </p> -->
+								<!-- </td> -->
+								<!-- <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line"> -->
+								<td class="text-right" style="border:1px solid;">
+                                    <!--Descuento -->
+									<span t-esc="'%.2f'%(l.price_discount)" />
+								</td>
+								<td class="text-right" style="border:1px solid;">
+                                    <!--Precio Total -->
+									<span t-esc="'%.2f'%(l.price_subtotal)"
+										  t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}" />
+								</td>
+							</tr>
+						</tbody>
+					</table>
+                    <table class="table table-condensed" style="border-collapse: collapse;">
+                        <tr>
+                            <td style="width: 60%">
+                                <table>
+                                    <tbody>
+                                        <t t-set="has_ret" t-value="any(tax.group in ('RetIva','RetRenta') for tax in o.sri_tax_line_ids)" />
+                                        <tr>
+                                            <td style="border: solid 1px black; font-size: 80%;" colspan="2">
+                                                <t>
+                                                    Art. 50 LEY DE RÉGIMEN TRIBUTARIO INTERNO.- Obligaciones de los Sujetos de retención.-<br/>
+                                                    Los agentes de retención están obligados a entregar el respectivo comprobante de retención dentro del término no mayor a cinco días de recibido el comprobante de venta.
+                                                    <t t-if="has_ret">
+                                                        Por favor retener los siguientes valores:
+                                                        <t t-foreach="o.sri_tax_line_ids" t-as="ret">
+                                                            <t t-if="ret.group in ('RetIva','RetRenta')">
+                                                                <p>CÓDIGO: <t t-esc="ret.impuesto"/> BASE: <t t-esc="'%.2f'%(ret.base)"/> MONTO: <t t-esc="'%.2f'%(ret.amount)"/>
+                                                                </p>
+                                                            </t>
+                                                        </t>
+                                                    </t>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: solid 1px black; font-size: 80%;" colspan="2">
+                                                Debo y pagaré incondicionalmentea la orden de <t t-esc="o.company_id.name"/> el valor de la presente factura más los intereses de ley. Sin protesto, exímase de la presentación para el pago. Para asuntos legales renuncio a domicilio y me someto a los jueces competentes de la ciudad de Quito, y acepto el trámite por la vía ejecutiva. Acepto que <t t-esc="o.company_id.name"/> transfiera los derechos de esta factura sin necesidad de notificación ni nueva aceptación de mi parte.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: solid back 1px;text-align: center; width:50%; vertical-align: middle;">
+                                                <br/>
+                                                <br/>
+                                                ________________________<br/>
+                                                RECIBÍ CONFORME
+                                                <br />
+                                                <br />
+                                            </td>
+                                            <td style="border: solid back 1px;text-align: left; width:50%; vertical-align: middle;">
+                                                <br/>
+                                                <br/>
+                                                NOMBRE:_________________
+                                                CÉDULA:_________________
+                                                <br />
+                                                <br />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: solid 1px black; font-size: 80%;" colspan="2">
+                                                <t t-if="o.comment">
+                                                    <span t-field="o.comment" />
+                                                    <br />
+                                                </t>
+                                                <t t-if="o.payment_term_id">
+                                                    <span t-field="o.payment_term_id.note" />
+                                                    <br />
+                                                </t>
+                                                <t t-if="o.name">
+                                                    <strong> Obs: </strong>
+                                                    <span t-field="o.name" />
+                                                    <br />
+                                                </t>
+                                                <t t-if="o.date_due">
+                                                    <strong>Fecha de pago: </strong>
+                                                    <span t-field="o.date_due"/>
+                                                    <br />
+                                                </t>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br/>
+                                <table class="table table-condensed" style="font-size: 80%;">
+                                    <thead>
+                                        <tr>
+                                            <th style="border: solid 1px black;">
+                                                <t>FORMA DE PAGO</t>
+                                            </th>
+                                            <th style="border: solid 1px black;">
+                                                <t>VALOR</t>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-if="o.payment_ids">
+                                            <tr t-foreach="o.payment_ids" t-as="pay">
+                                                <td style="border: solid 1px black;">
+                                                    <t t-esc="pay.formapago_id.name"/>
+                                                </td>
+                                                <td style="border: solid 1px black;">
+                                                    <t t-esc="pay.amount"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <tr t-if="o.residual > 0">
+                                            <td style="border: solid 1px black;">
+                                                <t t-esc="o.partner_id.formapago_id.name or o.journal_id.formapago_id.name or 'Otros con utilización del sistema finaciero'"/>
+                                            </td>
+                                            <td style="border: solid 1px black;">
+                                                <t t-esc="o.residual"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td style="width:5%"/>
+                            <td style="width:35%">
+					            <table class="table table-condensed table-bordered"
+						               style="border: 1px solid #000000;font-size:10px; border-collapse: collapse;">
+                                    <tr>
+						                <td style="border:1px solid;">
+                                            <t t-set="baseimpgrav" t-value="o.baseimpgrav + o.price_discount"/>
+							                <strong>
+								                SUBTOTAL GRAVADO
+							                </strong>
+						                </td>
+						                <td style="border:1px solid;" class="text-right">
+							                <span t-esc="'%.2f'%(baseimpgrav)"
+								                  t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}" />
+						                </td>
+					                </tr>
+                                    <tr t-if="o.price_discount">
+						                <td style="border:1px solid;">
+							                <strong>DESCUENTO</strong>
+						                </td>
+						                <td style="border:1px solid;" class="text-right">
+							                <span t-field="o.price_discount"
+								                  t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}" />
+						                </td>
+					                </tr>
+					                <tr>
+						                <td style="border:1px solid;">
+							                <strong>SUBTOTAL 0%</strong>
+						                </td>
+						                <td style="border:1px solid;" class="text-right">
+							                <span t-esc="'%.2f'%(o.baseimponible)"/>
+						                </td>
+                                    </tr>
+                                    <t t-if="o.basenograiva">
+						                <tr>
+							                <td style="border:1px solid;">
+								                <strong>SUBTOTAL NO OBJETO DE IVA</strong>
+							                </td>
+							                <td style="border:1px solid;" class="text-right">
+								                <span t-esc="'%.2f'%(o.basenograiva)" />
+							                </td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="o.baseimpexe">
+                                        <tr>
+							                <td style="border:1px solid;">
+								                <strong>SUBTOTAL EXCENTO DE IVA</strong>
+							                </td>
+							                <td style="border:1px solid;" class="text-right">
+								                <span t-esc="'%.2f'%(o.baseimpexe)" />
+							                </td>
+                                        </tr>
+                                    </t>
+					                <tr>
+						                <td style="border:1px solid;">
+							                <strong>SUBTOTAL SIN IMPUESTOS</strong>
+						                </td>
+						                <td style="border:1px solid;" class="text-right">
+							                <span t-esc="'%.2f'%(o.subtotal)"
+								                  t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}" />
+						                </td>
+					                </tr>
+					                <tr t-if="o.montoice">
+						                <td style="border:1px solid;">
+							                <strong>ICE</strong>
+						                </td>
+						                <td style="border:1px solid;" class="text-right">
+							                <span t-esc="'%.2f'%(o.montoice)" />
+						                </td>
+					                </tr>
+					                <tr>
+						                <td style="border:1px solid;">
+							                <strong>
+								                MONTO IVA
+							                </strong>
+						                </td>
+						                <td style="border:1px solid;" class="text-right">
+							                <span t-esc="'%.2f'%(o.montoiva)" />
+						                </td>
+					                </tr>
+                                    <tr>
+						                <td style="border:1px solid;">
+							                <strong>VALOR TOTAL</strong>
+						                </td>
+						                <td style="border:1px solid;" class="text-right">
+							                <span t-esc="'%.2f'%(o.total)"
+								                  t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}" />
+						                </td>
+					                </tr>
+				                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </template>
+
+        <record id="report_factura_electronica_id" model="ir.actions.report">
+	        <field name="paperformat_id" ref="ride_format" />
+        </record>
+
+        <report id="report_retencion_electronica_id" model="account.invoice"
+			    string="Retención electrónica" name="l10n_ec_sri_ece.report_retencion_electronica"
+			    file="Retención  electrónica" report_type="qweb-pdf" />
+		<template id="report_retencion_electronica">
+			<t t-foreach="docs" t-as="o">
+				<t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
+				<div class="page">
+                    <table class="table-condensed" style="width: 100%;">
+                        <tbody>
+                            <tr>
+                                <td style="width:50%; vertical-align: top;">
+                                <img t-if="o.company_id.logo" t-att-src="'data:image/png;base64, %s' % o.company_id.logo" style="width:60%; height:50%; align:center;"/>
+<!--                                     <img style="width:100%; height: 50%" src="l10n_ec_dimabru_base/static/description/logo.jpg"/> -->
+                                    <!-- <img t-if="o.company_id.logo" t-att-src=" 'data:image/png;base64, %s' % o.company_id.logo" -->
+                                    <!-- style="max-width: 100%; height: 270px; text-aling=center; margin-top: -1.5cm;"/> -->
+                                    <br />
+                                    <strong>
+                                        <t t-esc="o.company_id.name"/>
+                                    </strong>
+                                    <br/>
+                                    <strong>DIRECCIÓN MATRIZ</strong>
+                                    <br/>
+                                    <t t-esc="o.company_id.street"/>
+                                    <t t-esc="o.company_id.street2"/>
+                                    <br/>
+                                    <strong>CONTRIBUYENTE ESPECIAL NRO: </strong>
+                                    <t t-esc="o.company_id.contribuyenteespecial"/>
+                                    <br/>
+                                    <strong>OBLIGADO A LLEVAR CONTABILIDAD: </strong>SI<br/>
+                                </td>
+                                <td style="width:50%; border: solid 1px black; vertical-align: top;">
+                                    <strong>R.U.C: </strong>
+                                    <t t-esc="o.company_id.vat"/>
+                                    <br/>
+                                    <strong>COMPROBANTE DE RETENCIÓN</strong>
+                                    <br/>
+                                    <strong>Nro: </strong>
+                                    <t t-esc="o.estabretencion1" />-
+                                    <t t-esc="o.ptoemiretencion1" />-
+                                    <t t-esc="o.secretencion1" />
+                                    <br/>
+                                    <strong>NÚMERO DE AUTORIZACIÓN:</strong>
+                                    <br/>
+                                    <t t-esc="o.autretencion1"/>
+                                    <br/>
+                                    <strong>FECHA Y HORA DE AUTORIZACIÓN:</strong>
+                                    <br/>
+                                    <span t-field="o.retencion_electronica_id.fechaautorizacion" t-field-options="{&quot;format&quot;: &quot;dd-MM-y HH:mm&quot;}"/>
+                                    <br/>
+                                    <strong>AMBIENTE: </strong>
+                                    <span t-field="o.retencion_electronica_id.ambiente"/>
+                                    <br/>
+                                    <strong>EMISIÓN: </strong>
+                                    <span t-field="o.retencion_electronica_id.tipoemision"/>
+                                    <br/>
+                                    <strong>CLAVE DE ACCESO:</strong>
+                                    <br/>
+                                    <img style="width:100%; height: 40%" t-if="o.retencion_electronica_id" t-att-src="'data:image/png;base64,%s' % o.retencion_electronica_id.barcode128"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+					<table class="table table-condensed"
+						   style="border: 2px solid #000000;font-size:10px;  margin-top: -0.5cm;">
+						<tr class="active">
+							<td style="border: none;">
+								<strong>Razón Social / Nombres y Apellidos</strong>
+							</td>
+							<td style="border: none;" class="text-left">
+								<span t-if="o.partner_id.name">
+									<p>
+										<strong></strong>
+										<span t-field="o.partner_id.name" />
+									</p>
+								</span>
+							</td>
+							<td style="border: none;">
+								<strong>Identificación</strong>
+							</td>
+							<td style="border: none;" class="text-left">
+								<span t-if="o.partner_id.vat">
+									<p>
+										<strong></strong>
+										<span t-field="o.partner_id.vat" />
+									</p>
+								</span>
+							</td>
+						</tr>
+						<tr class="active">
+							<td style="border: none;">
+								<strong>Fecha Emisión</strong>
+							</td>
+							<td style="border: none;" class="text-left">
+								<t t-if="o.date_invoice">
+									<p>
+										<strong></strong>
+										<span t-field="o.fechaemiret1" />
+									</p>
+								</t>
+							</td>
+                            <td />
+                            <td />
+						</tr>
+					</table>
+
+					<table class="table table-condensed"
+						   style="border: 2px solid; font-size:10px; margin-top: -0.5cm;">
+						<thead>
+							<tr class="active">
+								<th style="border:1px solid;">Comprobante</th>
+								<th style="border:1px solid;" class="text-center">Número</th>
+								<th style="border:1px solid;">Fecha Emisión</th>
+                                <th style="border:1px solid;" class="text-center">Ejercicio Fiscal</th>
+								<th style="border:1px solid;">Base imponible para la retención</th>
+								<th class="text-right">Impuesto</th>
+								<th class="text-right">Código</th>
+								<th class="text-right">Porcentaje</th>
+								<th class="text-right">Valor retenido</th>
+							</tr>
+						</thead>
+						<tbody class="invoice_tbody">
+							<tr t-foreach="o.sri_tax_line_ids" t-as="l">
+								<t t-if="l.group in ('RetAir', 'RetBien10', 'RetServ20', 'RetServ50', 'RetBienes', 'RetServicios', 'RetServ100')">
+                                    <td class="text-center" style="border:1px solid; padding-top:0; padding-bottom:0;">
+									    <span t-field="l.invoice_id.comprobante_id.name" />
+								    </td>
+								    <td class="text-center" style="border:1px solid; padding-top:0; padding-bottom:0;">
+                                        <t t-esc="o.get_sri_secuencial_completo_factura()"/>
+								    </td>
+								    <td class="text-left" style="border:1px solid; padding-top:0; padding-bottom:0;">
+									    <span t-field="l.invoice_id.date_invoice" />
+								    </td>
+								    <td class="text-right" style="border:1px solid; padding-top:0; padding-bottom:0;">
+									    <span t-field="l.invoice_id.date_invoice" t-field-options="{&quot;format&quot;: &quot;MM/y&quot;}" />
+								    </td>
+								    <td class="text-right" style="border:1px solid; padding-top:0; padding-bottom:0;">
+									    <span t-esc="'%.2f'%(l.base)" />
+								    </td>
+								    <td class="text-right" style="border:1px solid; padding-top:0; padding-bottom:0;">
+                                        <t t-if="l.group in ('RetBien10', 'RetServ20', 'RetServ50', 'RetBienes', 'RetServicios', 'RetServ100')">
+                                            IVA
+                                        </t>
+                                        <t t-if="l.group == 'RetAir'">
+                                            RENTA
+                                        </t>
+								    </td>
+								    <td class="text-right" style="border:1px solid; padding-top:0; padding-bottom:0;">
+									    <span t-field="l.impuesto" />
+								    </td>
+								    <td class="text-right" style="border:1px solid; padding-top:0; padding-bottom:0;">
+									    <span t-field="l.porcentaje" />
+								    </td>
+								    <td class="text-right" style="border:1px solid; padding-top:0; padding-bottom:0;">
+									    <span t-esc="'%.2f'%(l.amount)" />
+								    </td>
+                                </t>
+							</tr>
+						</tbody>
+					</table>
+                    <table>
+                        <tr>
+                            <td style="width: 60%">
+								<strong>Información adicional</strong>
+                                <br/>
+                                <t>Dirección: </t>
+                                <t t-esc="o.partner_id.street"/>
+                                <br/>
+                                <t>Correo electrónico: </t>
+                                <t t-esc="o.partner_id.email"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </template>
+
+        <record id="report_retencion_electronica_id" model="ir.actions.report">
+	        <field name="paperformat_id" ref="ride_format" />
+        </record>
+
+        <!-- NOTA DE CRÉDITO ELECTRÓNICA -->
+        <report id="report_nota_credito_electronica_id" model="account.invoice"
+			    string="Nota de crédito electrónica" name="l10n_ec_sri_ece.report_nota_credito_electronica"
+			    file="Nota de crédito electrónica" report_type="qweb-pdf" />
+		<template id="report_nota_credito_electronica">
+			<t t-foreach="docs" t-as="o">
+				<t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
+				<div class="page">
+                    <table class="table-condensed table-bordered" style="width: 100%;">
+                        <tbody>
+                            <tr>
+                                <td style="width:50%; vertical-align: top;">
+                                <img t-if="o.company_id.logo" t-att-src="'data:image/png;base64, %s' % o.company_id.logo" style="width:60%; height:50%; align:center;"/>
+                                    <!-- <img style="width:100%; height: 50%" src="l10n_ec_dimabru_base/static/description/logo.jpg"/> -->
+                                    <!-- <img t-if="o.company_id.logo" t-att-src=" 'data:image/png;base64, %s' % o.company_id.logo" -->
+                                    <!-- style="max-width: 100%; height: 270px; text-aling=center; margin-top: -1.5cm;"/> -->
+                                    <br />
+                                    <strong>
+                                        <t t-esc="o.company_id.name"/>
+                                    </strong>
+                                    <br/>
+                                    <strong>DIRECCIÓN MATRIZ</strong>
+                                    <br/>
+                                    <t t-esc="o.company_id.street"/>
+                                    <t t-esc="o.company_id.street2"/>
+                                    <br/>
+                                    <strong>CONTRIBUYENTE ESPECIAL NRO: </strong>
+                                    <t t-esc="o.company_id.contribuyenteespecial"/>
+                                    <br/>
+                                    <strong>OBLIGADO A LLEVAR CONTABILIDAD: </strong>SI<br/>
+                                </td>
+                                <td style="width:50%; border: solid 1px black; vertical-align: top;">
+                                    <strong>R.U.C: </strong>
+                                    <t t-esc="o.company_id.vat"/>
+                                    <br/>
+                                    <strong>NOTA DE CRÉDITO</strong>
+                                    <br/>
+                                    <strong>Nro: </strong>
+                                    <t t-esc="o.get_sri_secuencial_completo_factura()"/>
+                                    <br/>
+                                    <strong>NÚMERO DE AUTORIZACIÓN:</strong>
+                                    <br/>
+                                    <t t-esc="o.autorizacion"/>
+                                    <br/>
+                                    <strong>FECHA Y HORA DE AUTORIZACIÓN:</strong>
+                                    <br/>
+                                    <!--<span t-field="o.fecha" t-field-options="{&quot;format&quot;: &quot;d-MM-y HH:mm&quot;}"/>
+                                        <br/>-->
+                                    <strong>AMBIENTE: </strong>
+                                    <span t-field="o.nota_credito_electronica_id.ambiente"/>
+                                    <br/>
+                                    <strong>EMISIÓN: </strong>
+                                    <span t-field="o.nota_credito_electronica_id.tipoemision"/>
+                                    <br/>
+                                    <strong>CLAVE DE ACCESO: </strong>
+                                    <br/>
+                                    <img
+                                            style="text-align: left;"
+                                            t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', o.nota_credito_electronica_id.claveacceso, 450, 60)"/>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+					<table class="table table-condensed"
+						   style="border: 2px solid #000000;font-size:10px;  margin-top: -0.5cm;">
+						<tr class="active">
+							<td style="border: none;">
+								<strong>Razón Social / Nombres y Apellidos</strong>
+							</td>
+							<td style="border: none;" class="text-left">
+								<span t-if="o.partner_id.name">
+									<p>
+										<strong></strong>
+										<span t-field="o.partner_id.name" />
+									</p>
+								</span>
+							</td>
+							<td style="border: none;">
+								<strong>Identificación</strong>
+							</td>
+							<td style="border: none;" class="text-left">
+								<span t-if="o.partner_id.vat">
+									<p>
+										<strong></strong>
+										<span t-field="o.partner_id.vat" />
+									</p>
+								</span>
+							</td>
+						</tr>
+						<tr class="active">
+							<td style="border: none;">
+								<strong>Fecha Emisión</strong>
+							</td>
+							<td style="border: none;" class="text-left">
+								<span t-if="o.date_invoice">
+									<p>
+										<strong></strong>
+										<span t-field="o.date_invoice" />
+									</p>
+								</span>
+							</td>
+							<td style="border: none;">
+								<strong>Guía Remisión</strong>
+							</td>
+							<td style="border: none;" class="text-left">
+
+							</td>
+						</tr>
+						<tr class="active">
+							<td style="border: none;">
+                                <p>
+								    <strong>Dirección</strong>
+                                </p>
+							</td>
+							<td style="border: none;" colspan="3" class="text-left">
+								<span t-field="o.partner_id.street" />
+							</td>
+						</tr>
+                        <tr class="active">
+                            <t t-foreach="o.origin_invoice_ids" t-as="origin" >
+                                <td style="border: none;">
+                                    <p>
+								        <strong>Comprobante que se Modifica</strong>
+                                    </p>
+							    </td>
+                                <td style="border: none;" class="text-left">
+                                    <p>
+                                        <strong>
+                                            <t t-esc="origin.comprobante_id.name" />
+                                        </strong>
+                                        <t t-esc="origin.get_sri_secuencial_completo_factura()" />
+                                    </p>
+                                </td>
+                                <td style="border: none;">
+                                    <p>
+                                        <strong>Fecha Emisión (Comprobante a Modificar)</strong>
+                                    </p>
+                                </td>
+                                <td style="border: none;" class="text-left">
+                                    <p>
+                                        <span t-field="origin.date_invoice" />
+                                    </p>
+                                </td>
+                            </t>
+                        </tr>
+                        <tr class="active">
+                            <td style="border: none;">
+                                <p>
+								    <strong>Razón Modificación</strong>
+                                </p>
+                            </td>
+                            <td style="border: none;" colspan="3" class="text-left">
+                                <span t-field="o.name" />
+                            </td>
+                        </tr>
+					</table>
+
+					<table class="table table-bordered table-condensed"
+						   style="border: 1px solid; font-size:10px; margin-top: -0.5cm;">
+						<thead>
+							<tr class="active">
+								<th style="border:1px solid;">Código</th>
+								<!-- <th style="border:1px solid;">Cod. Auxiliar</th> -->
+								<th style="border:1px solid;" class="text-center">Cantidad</th>
+								<th style="border:1px solid;">Descripción</th>
+								<!-- <th style="border:1px solid;">Detalle adicional</th> -->
+								<th style="border:1px solid;" class="text-center">Precio Unitario</th>
+								<!-- <th style="border:1px solid;">Subsidio</th> -->
+								<!-- <th style="border:1px solid;">Precio sin Subsidio</th> -->
+								<th style="border:1px solid;">Descuento(%)</th>
+								<!-- <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">DESC.(%)</th> -->
+								<th class="text-right">Precio Total</th>
+							</tr>
+						</thead>
+						<tbody class="invoice_tbody">
+							<tr t-foreach="o.invoice_line_ids" t-as="l">
+								<td class="text-center" style="border:1px solid;">
+                                    <!-- Codigo Principal -->
+									<span t-field="l.product_id.default_code" />
+								</td>
+								<!-- <td class="text-right" style="border:1px solid;"> -->
+                                <!--     <!-\- Codigo Auxiliar -\-> -->
+								<!-- </td> -->
+
+								<td class="text-center" style="border:1px solid;">
+                                    <!-- Cantidad -->
+									<span t-esc="'%.2f'%(l.quantity)" />
+									<span t-field="l.uom_id" groups="product.group_uom" />
+								</td>
+								<td class="text-left" style="border:1px solid;">
+									<span t-field="l.name" />
+								</td>
+                                <!-- Descripción -->
+								<!-- <td style="border:1px solid;" class="text-right"> -->
+                                <!--     <!-\- Detalle Adicional -\-> -->
+								<!-- </td> -->
+								<td class="text-right" style="border:1px solid;">
+                                    <!-- Precio Unitario -->
+									<span t-esc="'%.2f'%(l.price_unit)"/>
+								</td>
+								<!-- <td class="text-right" style="border:1px solid;"> -->
+                                <!--     <!-\- Subsidio -\-> -->
+								<!-- 	<p> 0.00 </p> -->
+								<!-- </td> -->
+								<!-- <td class="text-right" style="border:1px solid;"> -->
+                                <!--     <!-\- Precio sin subsidio -\-> -->
+								<!-- 	<p> 0.00 </p> -->
+								<!-- </td> -->
+								<!-- <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line"> -->
+								<td class="text-right" style="border:1px solid;">
+                                    <!--Descuento -->
+									<span t-esc="'%.2f'%(l.price_discount)"/>
+								</td>
+								<td class="text-right" style="border:1px solid;">
+                                    <!--Precio Total -->
+									<span t-esc="'%.2f'%(l.price_subtotal)"
+										  t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}" />
+								</td>
+							</tr>
+						</tbody>
+					</table>
+                    <table style="width:100%">
+                        <tr>
+                            <td style="width: 60%">
+                                <table style="font-size:10px; width:100%;">
+                                    <tbody>
+                                        <tr>
+                                            <td >
+                                                <strong>Información adicional</strong>
+                                                <br/>
+                                                <strong>Dirección: </strong>
+                                                <t t-esc="o.partner_id.street"/>
+                                                <br/>
+                                                <strong>Correo electrónico: </strong>
+                                                <t t-esc="o.partner_id.email"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td style="width:5%;"/>
+                            <td style="width:35%;">
+					            <table class="table table-condensed table-bordered"
+						               style="border: 2px solid #000000;font-size:10px; margin-top: -0.5cm; width:100%;">
+                                    <tbody>
+                                        <tr>
+						                    <td style="border:1px solid;">
+							                    <strong>
+								                    SUBTOTAL GRAVADO
+							                    </strong>
+						                    </td>
+						                    <td style="border:1px solid;" class="text-right">
+							                    <span t-esc="'%.2f'%(o.baseimpgrav)"
+								                      t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}" />
+						                    </td>
+					                    </tr>
+					                    <tr>
+						                    <td style="border:1px solid;">
+							                    <strong>SUBTOTAL 0%</strong>
+						                    </td>
+						                    <td style="border:1px solid;" class="text-right">
+							                    <span t-esc="'%.2f'%(o.baseimponible)"/>
+						                    </td>
+                                        </tr>
+                                        <t t-if="o.basenograiva">
+						                    <tr>
+							                    <td style="border:1px solid;">
+								                    <strong>SUBTOTAL NO OBJETO DE IVA</strong>
+							                    </td>
+							                    <td style="border:1px solid;" class="text-right">
+								                    <span t-esc="'%.2f'%(o.basenograiva)"/>
+							                    </td>
+                                            </tr>
+                                        </t>
+                                        <t t-if="o.baseimpexe">
+                                            <tr>
+							                    <td style="border:1px solid;">
+								                    <strong>SUBTOTAL EXCENTO DE IVA</strong>
+							                    </td>
+							                    <td style="border:1px solid;" class="text-right">
+								                    <span t-esc="'%.2f'%(o.baseimpexe)" />
+							                    </td>
+                                            </tr>
+                                        </t>
+					                    <tr>
+						                    <td style="border:1px solid;">
+							                    <strong>SUBTOTAL SIN IMPUESTOS</strong>
+						                    </td>
+						                    <td style="border:1px solid;" class="text-right">
+							                    <span t-esc="'%.2f'%(o.subtotal)"
+								                      t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}" />
+						                    </td>
+					                    </tr>
+					                    <tr t-if="o.price_discount">
+						                    <td style="border:1px solid;">
+							                    <strong>DESCUENTO</strong>
+						                    </td>
+						                    <td style="border:1px solid;" class="text-right">
+							                    <span t-esc="'%.2f'%(o.price_discount)"
+								                      t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}" />
+						                    </td>
+					                    </tr>
+					                    <tr t-if="o.montoice">
+						                    <td style="border:1px solid;">
+							                    <strong>ICE</strong>
+						                    </td>
+						                    <td style="border:1px solid;" class="text-right">
+							                    <span t-esc="'%.2f'%(o.montoice)" />
+						                    </td>
+					                    </tr>
+					                    <tr>
+						                    <td style="border:1px solid;">
+							                    <strong>
+								                    MONTO IVA
+							                    </strong>
+						                    </td>
+						                    <td style="border:1px solid;" class="text-right">
+							                    <span t-esc="'%.2f'%(o.montoiva)" />
+						                    </td>
+					                    </tr>
+                                        <tr>
+						                    <td style="border:1px solid;">
+							                    <strong>VALOR TOTAL</strong>
+						                    </td>
+						                    <td style="border:1px solid;" class="text-right">
+							                    <span t-esc="'%.2f'%(o.total)"
+								                      t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}" />
+						                    </td>
+					                    </tr>
+                                    </tbody>
+				                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </template>
+
+        <record id="report_nota_credito_electronica_id" model="ir.actions.report">
+	        <field name="paperformat_id" ref="ride_format" />
+        </record>
+
+    </data>
+</odoo>

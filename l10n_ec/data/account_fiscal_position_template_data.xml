@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- © 2019 Javier Vinueza - jvinueza@gmail.com
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+    <data>
+
+        <!-- ************************************************************* -->
+        <!-- Fiscal Position Templates -->
+        <!-- *********************************
+
+        <record id="fp_naturalno" model="account.fiscal.position.template">
+            <field name="name">Persona natural (no obligada a llevar contabilidad)</field>
+            <field name="chart_template_id" ref="account_chart_template_common"/>
+        </record>
+
+        <record id="fp_juridica" model="account.fiscal.position.template">
+            <field name="name">Sociedad (persona jurídica)</field>
+            <field name="chart_template_id" ref="account_chart_template_common"/>
+        </record>
+
+        <record id="fp_naturalsi" model="account.fiscal.position.template">
+            <field name="name">Persona natural (obligada a llevar contabilidad)</field>
+            <field name="chart_template_id" ref="account_chart_template_common"/>
+        </record>
+
+        <record id="fp_contribuyente" model="account.fiscal.position.template">
+            <field name="name">Persona natural (contribuyente RISE)</field>
+            <field name="chart_template_id" ref="account_chart_template_common"/>
+        </record>
+
+        <record id="fp_consumidor" model="account.fiscal.position.template">
+            <field name="name">Consumidor (persona natural con cédula)</field>
+            <field name="chart_template_id" ref="account_chart_template_common"/>
+        </record>
+
+        <record id="fp_gobierno" model="account.fiscal.position.template">
+            <field name="name">Gobierno e instituciones gubernamentales</field>
+            <field name="chart_template_id" ref="account_chart_template_common"/>
+        </record>
+
+        <record id="fp_especialess" model="account.fiscal.position.template">
+            <field name="name">Contribuyentes especiales (sociedad)</field>
+            <field name="chart_template_id" ref="account_chart_template_common"/>
+        </record>
+
+        <record id="fp_otros" model="account.fiscal.position.template">
+            <field name="name">Otros no sujetos a retención</field>
+            <field name="chart_template_id" ref="account_chart_template_common"/>
+        </record>
+
+        <record id="fp_especialesn" model="account.fiscal.position.template">
+            <field name="name">Contribuyentes especiales (persona natural)</field>
+            <field name="chart_template_id" ref="account_chart_template_common"/>
+        </record>
+
+        ************ -->
+       
+    </data>
+</odoo>

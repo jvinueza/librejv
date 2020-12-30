@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- © 2019 Javier Vinueza - jvinueza@gmail.com
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+    <data noupdate="1">
+
+        <!-- Account Tax Group 
+        <record id="tax_group_iva_0" model="account.tax.group">
+            <field name="name">IVA 0%</field>
+        </record>
+        
+		<record id="tax_group_iva_12" model="account.tax.group">
+            <field name="name">IVA 12%</field>
+        </record>
+        
+        <record id="tax_group_retencion" model="account.tax.group">
+            <field name="name">Retenciones</field>
+        </record>
+
+        <record id="tax_group_impuestos" model="account.tax.group">
+            <field name="name">Impuestos</field>
+        </record>	
+		-->
+		
+    </data>
+</odoo>

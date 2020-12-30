@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_partner_property_form_sri" model="ir.ui.view">
+        <field name="name">res.partner.property.form.sri</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='property_account_position_id']" position="replace">
+                <field
+                    name="formapago_id"
+                    placeholder="Forma de pago por defecto"
+                    widget="selection"
+                    />
+                <field name="parterel"/>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="before" >
+                <field name="property_account_position_id" placeholder="Posición Fiscal"
+                    widget="selection" required="1"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_partner_form_sri" model="ir.ui.view">
+        <field name="name">res.partner.form.sri</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group" position="before">
+                <group>
+                    <group>
+                        <field name="vat"
+                            placeholder="R.U.C / C.I. / Pasaporte"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_res_partner_filter" model="ir.ui.view">
+        <field name="name">SRI - filter</field>
+        <field name="model">res.partner</field>
+        <field name="type">search</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='name']" position="after" >
+                    <field name="vat" />
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>

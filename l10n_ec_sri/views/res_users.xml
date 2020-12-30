@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_users_form_simple_modif" model="ir.ui.view">
+        <field name="name">sri.res.users.preferences.form.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <group name="preferences" position="after">
+                <group name="autorizaciones" string="Autorizaciones">
+                    <field name="autorizacion_facturas_id"/>
+                    <field name="autorizacion_notas_credito_id"/>
+                    <field name="autorizacion_retenciones_id"/>
+                    <field name="autorizacion_liquidaciones_id"/>
+                </group>
+            </group>
+        </field>
+    </record>
+    <record id="view_users_form" model="ir.ui.view">
+        <field name="name">sri.base.view.users.form.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page name="autorizaciones" string="Autorizaciones">
+                    <group name="autorizaciones">
+                        <field name="autorizacion_facturas_id"/>
+                        <field name="autorizacion_notas_credito_id"/>
+                        <field name="autorizacion_retenciones_id"/>
+                        <field name="autorizacion_liquidaciones_id"/>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

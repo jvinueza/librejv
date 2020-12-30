@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="multi_data_wizard_form_view" model="ir.ui.view">
+        <field name="name">l10n_ec_sri.multi.data.wizard form view</field>
+        <field name="model">l10n_ec_sri.multi.data.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Datos de la retención">
+                    <group>
+                        <field name="estabretencion1"/>
+                        <field name="ptoemiretencion1"/>
+                        <field name="autretencion1"/>
+                        <field name="secretencion1"/>
+                        <field name="fechaemiret1"/>
+                    </group>
+                <footer>
+                    <button string='Register data' name="register_sri_data" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <act_window
+            id="action_multi_data_wizard"
+            name="Registrar datos del SRI"
+            res_model="l10n_ec_sri.multi.data.wizard"
+            src_model="account.invoice"
+            view_mode="form"
+            multi="True"
+            target="new"
+            key2="client_action_multi"
+    />
+</odoo>

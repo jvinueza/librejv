@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_picking_form" model="ir.ui.view">
+        <field name="name">Stock picking ece form view</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="before" >
+                <button name="%(l10n_ec_sri_rce.ce_import_wizard)d" string="IMPORT DE"
+                        type="action" class="btn-primary"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

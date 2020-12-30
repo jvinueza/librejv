@@ -1,0 +1,22 @@
+"id","name","code","active"
+"formapago_01","Sin utilizacion del sistema financiero","01",1
+"formapago_02","Cheque propio","02",0
+"formapago_03","Cheque certificado","03",0
+"formapago_04","Cheque de gerencia","04",0
+"formapago_05","Cheque del exterior","05",0
+"formapago_06","Débito de cuenta","06",0
+"formapago_07","Transferencia propio banco","07",0
+"formapago_08","Transferencia otro banco nacional","08",0
+"formapago_09","Transferencia  banco exterior","09",0
+"formapago_10","Tarjeta de crédito nacional","10",0
+"formapago_11","Tarjeta de crédito internacional","11",0
+"formapago_12","Giro","12",0
+"formapago_13","Deposito en cuenta (corriente/ahorros)","13",0
+"formapago_14","Endoso de inversión","14",0
+"formapago_15","Compensación de deudas","15",1
+"formapago_16","Tarjeta de débito","16",1
+"formapago_17","Dinero electrónico","17",1
+"formapago_18","Tarjeta prepago","18",1
+"formapago_19","Tarjeta de crédito","19",1
+"formapago_20","Otros con utilización del sistema financiero","20",1
+"formapago_21","Endoso de títulos","21",1

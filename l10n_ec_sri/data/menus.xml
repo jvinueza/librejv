@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem
+        name="S. R. I."
+        sequence="5"
+        parent="account.menu_finance"
+        id="menu_sri"
+        groups="account.group_account_user"
+        />
+
+    <menuitem
+        name="Tributación"
+        id="menu_sri_reports"
+        parent="menu_sri"
+        sequence="1"
+        groups="account.group_account_user"
+        />
+
+    <menuitem
+        name="Configuración"
+        id="menu_sri_settings"
+        parent="menu_sri"
+        sequence="10"
+        groups="account.group_account_manager"
+        />
+
+    <menuitem
+        id="tax_form_set_menu"
+        name="Declaraciones"
+        parent="menu_sri_reports"
+        action="tax_form_set_list_action"
+        sequence="1"
+        />
+
+    <menuitem
+        id="tax_form_menu"
+        name="Formularios"
+        parent="menu_sri_reports"
+        action="tax_form_list_action"
+        sequence="2"
+        groups="account.group_account_user"
+        />
+
+    <menuitem
+        id="menu_comprobantesanulados"
+        name="Comprobantes anulados"
+        sequence="5"
+        action="action_comprobantesanulados"
+        parent="menu_sri"
+        groups="account.group_account_user"
+        />
+
+    <menuitem
+        id="menu_autorizacion"
+        name="Autorizaciones"
+        sequence="10"
+        action="action_autorizacion"
+        parent="menu_sri"
+        groups="account.group_account_user"
+        />
+
+
+</odoo>

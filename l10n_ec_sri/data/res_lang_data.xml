@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data noupdate="1">
+
+    <record id="l10n_ec_sri_lang_ec" model="ir.model.data">
+      <field name="name">lang_ec</field>
+      <field name="noupdate">TRUE</field>
+      <field name="module">l10n_ec_sri</field>
+      <field name="model">res.lang</field>
+      <field name="res_id" model="res.lang" search="[('code', '=', 'es_EC')]"/>
+    </record>
+
+    <record id="l10n_ec_sri.lang_ec" model="res.lang">
+      <field name="grouping">[]</field>
+      <field name="thousands_sep"></field>
+      <field name="date_format">%d/%m/%Y</field>
+    </record>
+
+  </data>
+</openerp>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <menuitem
+        id="menu_documentos_electronicos"
+        name="Documentos electronicos"
+        parent="l10n_ec_sri.menu_sri"
+        sequence="20"
+        />
+
+    <record id="documento_electronico_form_view" model="ir.ui.view">
+        <field name="name">SRI documento electronico form view</field>
+        <field name="model">l10n_ec_sri.documento.electronico</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                        attrs="{
+                            'invisible':
+                                [
+                                    ('estado', 'not in', (
+                                        'RECIBIDA','EN PROCESO', 'DEVUELTA'
+                                        )
+                                    )
+                                ]
+                            }"
+                        name="receive_de_offline"
+                        string="VERIFICAR RESPUESTA"
+                        type="object"/>
+                    <button
+                        attrs="{'invisible':[('estado', '!=', 'NO ENVIADO')]}"
+                        name="send_de_backend"
+                        string="ENVIAR DOCUMENTO"
+                        type="object"/>
+                    <field name="estado" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="reference"/>
+                        <field name="comprobante_id"/>
+                        <field name="tipoemision"/>
+                        <field name="ambiente"/>
+                        <field name="claveacceso"/>
+                        <field name="barcode128" widget="image"/>
+                        <field name="fechaautorizacion"/>
+                        <field name="mensajes"/>
+                        <field name="xml_file" filename="xml_filename"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="documento_electronico_tree_view" model="ir.ui.view">
+        <field name="name">documento.electronico.tree.view</field>
+        <field name="model">l10n_ec_sri.documento.electronico</field>
+        <field name="arch" type="xml">
+            <tree string="Documento electronico">
+                <field name="reference"/>
+                <field name="comprobante_id"/>
+                <field name="ambiente"/>
+                <field name="fechaautorizacion"/>
+                <field name="estado"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="documento_electronico_search_view" model="ir.ui.view">
+        <field name="name">documento.electronico.search.view</field>
+        <field name="model">l10n_ec_sri.documento.electronico</field>
+        <field name="arch" type="xml">
+            <search string="Documento electronico">
+                <field name="estado"/>
+                <field name="reference"/>
+                <field name="ambiente"/>
+            </search>
+        </field>
+    </record>
+    
+    <record id="action_documento_electronico" model="ir.actions.act_window">
+        <field name="name">Documento electronico</field>
+        <field name="res_model">l10n_ec_sri.documento.electronico</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        id="menu_documento_electronico"
+        name="Documento electronico"
+        parent="menu_documentos_electronicos"
+        sequence="100"
+        action="action_documento_electronico"
+        />
+
+    <record id="documento_electronico_queue_form_view" model="ir.ui.view">
+        <field name="name">documento.electronico.queue.form.view</field>
+        <field name="model">l10n_ec_sri.documento.electronico.queue</field>
+        <field name="arch" type="xml">
+            <form string="Documento electronico queue">
+                <header>
+                    <button name="process_de_queue" string="PROCESAR DOCUMENTO ELECTRÓNICOS" type="object"/>
+                </header>
+                <sheet>
+                    <group name="queue_lines" string="Queue lines">
+                        <field name="queue_line_ids" nolabel="1" readonly="1">
+                            <tree>
+                                <field name="create_date"/>
+                                <field name="reference"/>
+                                <field name="documento_electronico_id"/>
+                                <field name="sent"/>
+                                <field name="estado"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="documento_electronico_queue_tree_view" model="ir.ui.view">
+        <field name="name">documento.electronico.queue.tree.view</field>
+        <field name="model">l10n_ec_sri.documento.electronico.queue</field>
+        <field name="arch" type="xml">
+            <tree string="Documento electronico" create="0" edit="0" delete="0">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_documento_electronico_queue" model="ir.actions.act_window">
+        <field name="name">Documento electronico queue</field>
+        <field name="res_model">l10n_ec_sri.documento.electronico.queue</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="res_id" ref="l10n_ec_sri_ece.documento_electronico_queue"/>
+    </record>
+
+    <menuitem
+        id="menu_documento_electronico_queue"
+        name="Documento electronico queue"
+        parent="menu_documentos_electronicos"
+        sequence="100"
+        action="action_documento_electronico_queue"
+        />
+
+    <record id="documento_electronico_queue_line_form_view" model="ir.ui.view">
+        <field name="name">documento.electronico.queue.line.form.view</field>
+        <field name="model">l10n_ec_sri.documento.electronico.queue.line</field>
+        <field name="arch" type="xml">
+            <form string="Documento electronico queue line">
+                <header>
+                    <field name="estado" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="reference" readonly="1"/>
+                        <field name="documento_electronico_id" readonly="1"/>
+                        <field name="sent" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>
