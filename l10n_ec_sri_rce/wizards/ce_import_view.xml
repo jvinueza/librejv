@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="ce_invoice_import_wizard_form_view" model="ir.ui.view">
+        <field name="name">l10n_ec_sri.ce.import.wizard form view</field>
+        <field name="model">l10n_ec_sri.ce.import.wizard</field>
+        <field name="arch" type="xml"> 
+            <form string="Archivo a importar">
+                <sheet>          
+                    <group name="import_file" string="Documentos a importar">
+                        <field name="wizard_line_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="import_file" widget="binary"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <notebook>
+	                    <page name="documentos" string="Documentos">
+		                     <field name="data_ids" nolabel="1" widget="one2many_list" mode="tree"></field> 		                   
+		                </page>
+		                <page name="conciliados" string="Conciliados">		                   
+		                     <field name="data_ids" nolabel="1" widget="one2many_list" mode="tree"></field> 		                   
+		                </page>
+		                <page name="noconciliados" string="No Conciliados">		                   
+		                     <field name="data_ids" nolabel="1" widget="one2many_list" mode="tree"></field> 		                   
+		                </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string='Import' name="button_import_file" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+	<record id="ce_import_wizard_form_view" model="ir.ui.view">
+        <field name="name">l10n_ec_sri.ce.import.wizard form view</field>
+        <field name="model">l10n_ec_sri.ce.import.wizard</field>
+        <field name="arch" type="xml">       
+            <form string="Archivo a importar">
+                <header>              
+                    <button string='Importar' name="button_import_file" type="object" class="btn-primary" attrs="{'invisible': ['|',('state', '=', 'open')]}"/>                    
+                    <button string='Validación Masiva' name="button_validate_mass" type="object" class="btn-primary" attrs="{'invisible': ['|',('state', '=', 'draft')]}"/>
+                    <button string='Nueva Importación' name="button_new_data" type="object" class="btn-primary" attrs="{'invisible': [('state', '=', 'draft')]}"/>                    
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open" statusbar_colors='{"open":"blue"}'/>                    
+                </header>
+                <sheet>
+                	<group name="confirm">
+                		<button string='Confirmar' name="button_confirm" type="object" class="btn-default"  attrs="{'invisible': [('state', '=', 'open'),('data_ids', '=', [])]}"/>
+                		<button string='Refrescar' name="button_refresh" type="object" class="btn-default"  attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                	</group>
+                    <group string="Documentos a importar" attrs="{'invisible': [('state', '=', 'open')]}" >                        
+                        <field name="wizard_line_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="import_file" widget="binary"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <notebook>
+	                    <page name="documentos" string="Documentos">
+		                     <field name="data_ids" nolabel="1" widget="one2many_list" mode="tree"/> 		                   
+		                </page>
+		                <page name="conciliados" string="Conciliados">		                   
+		                     <field name="conciliate_ids" nolabel="1" widget="one2many_list" mode="tree"/> 		                   
+		                </page>
+		                <page name="noconciliados" string="No Conciliados">		                   
+		                     <field name="no_conciliate_ids" nolabel="1" widget="one2many_list" mode="tree"/> 		                   
+		                </page>
+                    </notebook>
+                </sheet>               
+            </form>
+        </field>
+    </record>
+    
+    <record id="pv_invoice_import_form" model="ir.ui.view">
+            <field name="name">pv.invoice.import.form</field>
+            <field name="model">l10n_ec_sri.ce.pre.validate</field>
+            <field name="arch" type="xml">
+	            	<tree string="Pre Invoice Lines" editable="bottom" create="0">		   
+	            	<button name="validar_doc" type="object" icon="fa-circle"
+                            string="Validar documento" attrs="{'readonly':[('nivel','=','validate')]}"/>            
+	                      <field name="comprobante" readonly="1"/>
+	                      <field name="numero_factura" readonly="1"/>
+	                      <field name="doc_modificado" readonly="1"/>
+	                      <field name="ruc" readonly="1"/>
+	                      <field name="razon_social_emisor" readonly="1"/>
+	                      <field name="partner_id" attrs="{'readonly':[('nivel','=','validate')]}" />	                     	                    
+	                      <field name="clave_acceso" readonly="1"/>
+	                      <field name="product_id" attrs="{'required': [('agrupate_product_lines', '=', True)],'readonly':[('nivel','=','validate')]}" />	                   
+	                      <field name="xml" readonly="1"/>
+	                      <field name="agrupate_product_lines" attrs="{'readonly':[('nivel','=','validate')]}"/>	                      
+	                      <field name="prevalidate_id" invisible="1"/>    
+	                      <field name="nivel" invisible="1"/>                                                                       
+					</tree>
+	            </field>      
+    </record>
+    
+    <record id="comprobante_estado_invoice_import_form" model="ir.ui.view">
+            <field name="name">comprobante.estado.invoice.import.form</field>
+            <field name="model">l10n_ec_sri.doc.import.estado</field>
+            <field name="arch" type="xml">
+	            	<tree string="Estado lines" editable="bottom" create="0">
+	                      <field name="clave_acceso" readonly="1" />	                      
+	                      <field name="numero_factura" readonly="1"/>
+	                      <field name="partner_id" readonly="1"/>	                      
+	                      <field name="ruc" readonly="1"/>	                      	                     	                    	                                                             	                    
+	                      <field name="conciliate_id" invisible="1"/> 
+	                      <field name="no_conciliate_id" invisible="1"/>
+	                      <field name="invoice_id" readonly="1"/> 
+	                      <field name="motivo" readonly="1"/>	                                                                                                 
+					</tree>
+	            </field>      
+    </record>
+
+	<act_window id="ce_invoice_import_wizard_action"
+		name="Importar documentos electrónicos"
+		res_model="l10n_ec_sri.ce.import.wizard" src_model="account.invoice"
+		view_mode="form" multi="True" target="new" key2="client_action_multi"
+		view_id="ce_invoice_import_wizard_form_view" />
+	<act_window id="ce_import_wizard_action"
+		name="Importar documentos electrónicos"
+		res_model="l10n_ec_sri.ce.import.wizard" src_model="account.invoice"
+		view_mode="form" target="inline" view_id="ce_import_wizard_form_view" />
+
+	<menuitem id="ce_import_wizard_menu"
+		name="Importar documentos electronicos"
+		parent="l10n_ec_sri.menu_sri_reports" action="ce_import_wizard_action"
+		sequence="100" />
+</odoo>
