@@ -1,0 +1,6 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_l10n_ec_sri_firma_account_invoice","l10n_ec_sri_firma account invoice","model_l10n_ec_sri_firma","account.group_account_invoice",1,1,1,1
+"access_l10n_ec_sri_ambiente_account_invoice","l10n_ec_sri_ambiente account invoice","model_l10n_ec_sri_ambiente","account.group_account_invoice",1,1,1,1
+"access_l10n_ec_sri_documento_electronico_account_invoice","l10n_ec_sri_documento_electronico account invoice","model_l10n_ec_sri_documento_electronico","account.group_account_invoice",1,1,1,1
+"access_l10n_ec_sri_documento_electronico_queue","l10n_ec_sri_documento_electronico queue","model_l10n_ec_sri_documento_electronico_queue","account.group_account_invoice",1,1,1,1
+"access_l10n_ec_sri_documento_electronico_queue_line","l10n_ec_sri_documento_electronico queue line","model_l10n_ec_sri_documento_electronico_queue_line","account.group_account_invoice",1,1,1,1
