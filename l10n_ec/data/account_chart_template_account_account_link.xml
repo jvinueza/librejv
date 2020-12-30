@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--
+        We complete the declaration of the chart of account here.
+        These data are to be created once the accounts have been created in database,
+        they finish "linking" the CoA to them.
+		
+		Cuentas a cobrar
+        Cuentas a pagar
+		proveedores
+        Clientes
+		Diferencia + en cambio
+		Diferencia - en cambio
+         
+		
+        <record id="account_chart_template_common" model="account.chart.template">
+            <field name="property_account_receivable_id" ref="account_common_1010205020101"/>
+            <field name="property_account_payable_id" ref="account_common_201030101"/>
+            <field name="property_account_expense_categ_id" ref="account_common_201030101"/>
+            <field name="property_account_income_categ_id" ref="account_common_1010205020101"/>
+             <field name="income_currency_exchange_account_id" ref="account_common_50105010101"/>
+            <field name="expense_currency_exchange_account_id" ref="account_common_50105010102"/> 
+        
+        </record> -->
+       
+    </data>
+</odoo>

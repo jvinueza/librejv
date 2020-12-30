@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_chart_template_common" model="account.chart.template">
+            <field name="name">PGCE común</field>
+            <field name="visible" eval="0"/>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="cash_account_code_prefix">1.01.01.01.0</field>
+            <field name="bank_account_code_prefix">1.01.01.02.0</field>
+            <field name="transfer_account_code_prefix">1.01.01.03.0</field> 
+        </record>
+
+        <record id="account_chart_template_sri" model="account.chart.template">
+            <field name="name">Plan Contable SRI</field>
+            <field name="complete_tax_set" eval="True"/>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="cash_account_code_prefix">1.01.01.01.0</field>
+            <field name="bank_account_code_prefix">1.01.01.02.0</field>
+            <field name="transfer_account_code_prefix">1.01.01.03.0</field>
+            <field name="parent_id" ref="account_chart_template_common"/>
+        </record>
+
+		<record id="account_chart_template_cia" model="account.chart.template">
+			<field name="name">Plan Contable Super Cías.</field>
+			<field name="complete_tax_set" eval="True"/>
+			<field name="currency_id" ref="base.USD"/>
+			<field name="cash_account_code_prefix">1.01.01.01.0</field>
+			<field name="bank_account_code_prefix">1.01.01.02.0</field>
+			<field name="transfer_account_code_prefix">1.01.01.03.0</field> 
+			<field name="parent_id" ref="account_chart_template_common"/> 
+		</record>
+    </data>
+</odoo>
