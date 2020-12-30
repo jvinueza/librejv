@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="ats_line_tree_view" model="ir.ui.view">
+        <field name="name">Ats line tree view</field>
+        <field name="model">l10n_ec_sri.ats.line</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="codsustento"/>
+                <field name="basenograiva"/>
+                <field name="baseimponible"/>
+                <field name="baseimpgrav"/>
+                <field name="baseimpexe"/>
+                <field name="montoiva"/>
+                <field name="montoice"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="ats_line_form_view">
+        <field name="name">Sri Ats Line form view</field>
+        <field name="model">l10n_ec_sri.ats.line</field>
+        <field name="arch" type="xml">
+            <form string="Línea de declaración para el ATS.">
+                <sheet>
+                    <group>
+                        <group string="Información general">
+                            <field name="codsustento"/>
+                            <field name="basenograiva"/>
+                            <field name="baseimponible"/>
+                            <field name="baseimpgrav"/>
+                            <field name="baseimpexe"/>
+                            <field name="montoiva"/>
+                            <field name="montoice"/>
+                        </group>
+                        <group string="Retenciones en compras">
+                            <field name="valretbien10"/>
+                            <field name="valretserv20"/>
+                            <field name="valretserv50"/>
+                            <field name="valorretbienes"/>
+                            <field name="valorretservicios"/>
+                            <field name="valretserv100"/>
+                        </group>
+                        <group string="Retenciones en ventas">
+                            <field name="valorretrenta"/>
+                            <field name="valorretiva"/>
+                        </group>
+                    </group>
+                    <group string="Retenciones de AIR">
+                        <field name="detalleair_ids" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="ats_line_pivot_view">
+        <field name="name">ATS line pivot</field>
+        <field name="model">l10n_ec_sri.ats.line</field>
+        <field name="arch" type="xml">
+            <pivot string="ATS line">
+                <field name="codsustento" type="row"/>
+                <field name="basenograiva" type="measure"/>
+                <field name="baseimponible" type="measure"/>
+                <field name="baseimpgrav" type="measure"/>
+                <field name="baseimpexe" type="measure"/>
+                <field name="montoiva" type="measure"/>
+                <field name="montoice" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="ats_line_search_view" model="ir.ui.view">
+        <field name="name">Sri ATS Line search view</field>
+        <field name="model">l10n_ec_sri.ats.line</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <data>
+                <field name="codsustento"/>
+                <group expand="1" string="Group By">
+                    <filter string="Sustento tributario" name="codsustento" domain='[]'
+                            context="{'group_by':'codsustento'}"/>
+                </group>
+            </data>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="detalleair_form_view">
+        <field name="name">detalleair.form</field>
+        <field name="model">l10n_ec_sri.detalleair</field>
+        <field name="arch" type="xml">
+            <form string="Retenciones de anticipo del IR.">
+                <sheet>
+                    <group>
+                        <field name="codretair"/>
+                        <field name="baseimpair"/>
+                        <field name="porcentajeair"/>
+                        <field name="valretair"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="detalleair_tree_view" model="ir.ui.view">
+        <field name="name">DetalleAir tree view</field>
+        <field name="model">l10n_ec_sri.detalleair</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="codretair"/>
+                <field name="baseimpair"/>
+                <field name="porcentajeair"/>
+                <field name="valretair"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="tax_line_form_view">
+        <field name="name">Sri Tax Line form view</field>
+        <field name="model">l10n_ec_sri.tax.line</field>
+        <field name="arch" type="xml">
+            <form string="Impuestos de la línea.">
+                <sheet>
+                    <group>
+                        <field name="invoice_id" readonly="1"/>
+                        <field name="formulario"/>
+                        <field name="campo"/>
+                        <field name="base"/>
+                        <field name="amount"/>
+                        <field name="group"/>
+                        <field name="porcentaje"/>
+                        <field name="impuesto"/>
+                        <field name="gap"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="tax_line_tree_view" model="ir.ui.view">
+        <field name="name">Sri Tax Line tree.view</field>
+        <field name="model">l10n_ec_sri.tax.line</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="formulario"/>
+                <field name="campo"/>
+                <field name="base"/>
+                <field name="amount"/>
+                <field name="porcentaje"/>
+                <field name="impuesto"/>
+                <field name="codigo"/>
+                <field name="codigoporcentaje"/>
+                <field name="gap"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="tax_line_search_view" model="ir.ui.view">
+        <field name="name">Sri Tax Line search view</field>
+        <field name="model">l10n_ec_sri.tax.line</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <data>
+                <field name="formulario"/>
+                <field name="campo"/>
+                <field name="impuesto"/>
+                <group expand="1" string="Group By">
+                    <filter string="Formulario" name="formulario" domain='[]' context="{'group_by':'formulario'}"/>
+                    <filter string="Campo" name='campo' domain='[]' context="{'group_by':'campo'}"/>
+                </group>
+            </data>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="tax_line_pivot_view">
+        <field name="name">Tax line pivot</field>
+        <field name="model">l10n_ec_sri.tax.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Tax line">
+                <field name="formulario" type="row"/>
+                <field name="campo" type="row"/>
+                <field name="invoice_id"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="ats_line_action" model="ir.actions.act_window">
+        <field name="name">ATS line analysis</field>
+        <field name="res_model">l10n_ec_sri.ats.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot,form,tree</field>
+        <field name="search_view_id" ref="ats_line_search_view"/>
+        <field name="context">{'group_by':['codsustento']}</field>
+    </record>
+
+    <record id="tax_line_action" model="ir.actions.act_window">
+        <field name="name">Tax line analysis</field>
+        <field name="res_model">l10n_ec_sri.tax.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot,form,tree</field>
+        <field name="search_view_id" ref="tax_line_search_view"/>
+        <field name="context">{'group_by':['formulario','campo']}</field>
+    </record>
+
+    <record model="ir.ui.view" id="tax_form_set_form_view">
+        <field name="name">Tax form set form view</field>
+        <field name="model">l10n_ec_sri.tax.form.set</field>
+        <field name="arch" type="xml">
+            <form string="Tax form set">
+                <header>
+                    <button name="get_invoices" string="Get invoices"
+                            type="object" class="btn-primary"/>
+                    <button name="prepare_sri_declaration" string="Prepare declaration"
+                            type="object" class="btn-primary"/>
+                    <button name="%(tax_line_action)d" type="action" string="Tax analysis"/>
+                    <button name="%(ats_line_action)d" type="action" string="ATS analysis"/>
+                </header>
+                <sheet>
+                    <group string="Declaration data">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <div>
+                        <button
+                            name="button_get_xlsx_report"
+                            type='object' string='Generate report'/>
+                        <p>
+                            Puede descargar su reporte de aquí:
+                            <field name="xlsx_file" filename="xlsx_filename"/>
+                            <field name="xlsx_filename" invisible="1"/>
+                        </p>
+                    </div>
+                    <notebook>
+                    <page string="Formularios">
+                        <field
+                               name="sri_tax_form_ids"
+                               nolabel="1"
+                               context="{'default_sri_tax_form_set_id': active_id}">
+                            <tree> <!-- create="0" delete="0" limit="10" -->
+                                <field name="formulario"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Compras">
+                        <field name="in_invoice_ids" nolabel="1" >
+                            <tree limit="5" create="0">
+                                <field name="type"/>
+                                <field name="secuencial"/>
+                                <field name="number"/>
+                                <field name="date"/>
+                                <field name="date_invoice"/>
+                                <field name="amount_total"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Ventas">
+                        <group string="Facturas de ventas">
+                            <field name="out_invoice_ids" nolabel="1" readonly="1">
+                                <tree limit="5" create="0">
+                                    <field name="type"/>
+                                    <field name="secuencial"/>
+                                    <field name="number"/>
+                                    <field name="date"/>
+                                    <field name="date_invoice"/>
+                                    <field name="amount_total"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group string="Retenciones manuales en ventas">
+                            <field name="out_r_sri_tax_line_ids" nolabel="1" readonly="1">
+                                <tree>
+                                    <field name="fecha_declaracion"/>
+                                    <field name="r_invoice_id"/>
+                                    <field name="formulario"/>
+                                    <field name="campo"/>
+                                    <field name="base"/>
+                                    <field name="amount"/>
+                                    <field name="group"/>
+                                    <field name="porcentaje"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <field name="fecha_declaracion"/>
+                                        <field name="r_invoice_id"/>
+                                        <field name="formulario"/>
+                                        <field name="campo"/>
+                                        <field name="base"/>
+                                        <field name="amount"/>
+                                        <field name="group"/>
+                                        <field name="porcentaje"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </group>
+                    </page>
+                    <page string="NC COMPRAS">
+                        <field name="in_refund_ids" nolabel="1">
+                            <tree limit="5" create="0">
+                                <field name="type"/>
+                                <field name="secuencial"/>
+                                <field name="number"/>
+                                <field name="date"/>
+                                <field name="date_invoice"/>
+                                <field name="amount_total"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="NC VENTAS">
+                        <field name="out_refund_ids" nolabel="1">
+                            <tree limit="5" create="0">
+                                <field name="type"/>
+                                <field name="secuencial"/>
+                                <field name="number"/>
+                                <field name="date"/>
+                                <field name="date_invoice"/>
+                                <field name="amount_total"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page name="comprobantes_anulados" string="ANULADOS">
+                        <field name="comprobantesanulados_ids" nolabel="1"/>
+                    </page>
+                    <page string="NO DECLARADO">
+                        <field name="no_declarado_ids" nolabel="1">
+                            <tree limit="5" create="0">
+                                <field name="type"/>
+                                <field name="secuencial"/>
+                                <field name="number"/>
+                                <field name="date"/>
+                                <field name="date_invoice"/>
+                                <field name="amount_total"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                    </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="tax_form_set_tree_view" model="ir.ui.view">
+        <field name="name">Tax form set tree view</field>
+        <field name="model">l10n_ec_sri.tax.form.set</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="date_from"/>
+                <field name="date_to"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="tax_form_set_list_action">
+        <field name="name">Tax form set action</field>
+        <field name="res_model">l10n_ec_sri.tax.form.set</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Declaraciones.
+            </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="tax_form_list_action">
+        <field name="name">Tax form action</field>
+        <field name="res_model">l10n_ec_sri.tax.form</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Formularios.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_tax_form_payment" model="ir.actions.act_window">
+        <field name="name">Register payment</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account.view_account_payment_form"/>
+        <field name="context">{
+            'default_payment_type': 'outbound',
+            'default_tax_form_ids': [(4, active_id, None)],
+            }
+        </field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_account_move" model="ir.actions.act_window">
+        <field name="name">Register New Move</field>
+        <field name="res_model">account.move</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account.view_move_form"/>
+        <field name="context">{
+            'default_tax_form_ids': [(4, active_id, None)],
+            }
+        </field>
+        <field name="target">new</field>
+    </record>
+
+    <record model="ir.ui.view" id="tax_form_form_view">
+        <field name="name">Tax form form view</field>
+        <field name="model">l10n_ec_sri.tax.form</field>
+        <field name="arch" type="xml">
+            <form string="Tax form">
+                <header>
+                    <button
+                        name="get_tax_form_lines" string="GET LINES"
+                        attrs="{'invisible': [('formulario', '=', 'ats')]}"
+                        type="object" class="btn-primary"/>
+                    <button
+                        name="%(action_tax_form_payment)d" string="New payment"
+                        attrs="{'invisible': [('formulario', '=', 'ats')]}"
+                        type="action" />
+                    <button
+                        name="%(action_account_move)d" string="New Move"
+                        attrs="{'invisible': [('formulario', '=', 'ats')]}"
+                        type="action" />
+
+                </header>
+                <sheet>
+                    <group>
+                        <field name="formulario"/>
+                    </group>
+                    <group attrs="{'invisible': [('formulario', '!=', 'ats')]}">
+                        <field name="declarar_facturas_electronicas"/>
+                        <div>
+                            <button name="get_ats_xml" string="Generar xml" type="object" class="btn-primary"/>
+                            <p>Descargar XML:
+                                <field name="xml_file" filename="xml_filename"/>
+                                <field name="xml_filename" invisible="1"/>   
+                            </p>
+                        </div>
+                    </group>
+                    <notebook attrs="{'invisible': [('formulario', '=', 'ats')]}">
+                        <page string="Líneas de impuestos">
+                            <field name="sri_tax_form_line_ids"
+                                   nolabel="1" readonly="1"/>
+                        </page>
+                        <page string="Pagos">
+                            <field name="payment_ids" nolabel="1" readonly="1"/>
+                        </page>
+                        <page string="Movimientos">
+                            <field name="move_ids" nolabel="1" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="tax_form_tree_view" model="ir.ui.view">
+        <field name="name">Tax form tree view</field>
+        <field name="model">l10n_ec_sri.tax.form</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="formulario"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="tax_form_line_form_view">
+        <field name="name">Tax form line form view</field>
+        <field name="model">l10n_ec_sri.tax.form.line</field>
+        <field name="arch" type="xml">
+            <form string="Tax form line">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="description"/>
+                            <field name="campo"/>
+                        </group>
+                        <group>
+                            <field name="bruto"/>
+                            <field name="neto"/>
+                            <field name="impuesto"/>
+                        </group>
+                    </group>
+                    <group string="Declared taxes">
+                        <field name="sri_tax_line_ids" limit="10"
+                               nolabel="1" readonly="1">
+                            <tree>
+                                <field name="invoice_id"/>
+                                <field name="base"/>
+                                <field name="amount"/>
+                                <field name="porcentaje"/>
+                                <field name="impuesto"/>
+                                <field name="gap"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="tax_form_line_tree_view" model="ir.ui.view">
+        <field name="name">Tax form line tree view</field>
+        <field name="model">l10n_ec_sri.tax.form.line</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="description"/>
+                <field name="campo"/>
+                <field name="bruto"/>
+                <field name="neto"/>
+                <field name="impuesto"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

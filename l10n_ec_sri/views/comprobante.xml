@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_comprobante_form" model="ir.ui.view">
+            <field name="name">view.comprobante.form</field>
+            <field name="model">l10n_ec_sri.comprobante</field>
+            <field name="arch" type="xml">
+                <form string="Tipos de comprobante autorizados.">
+                    <sheet>
+                        <group string="Informacion general" col="4">
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="requiere_autorizacion"/>
+                            <field name="sequence"/>
+                            <field name="en_compras"/>
+                            <field name="en_ventas"/>
+                            <field name="es_retencion" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_comprobantesanulados_form" model="ir.ui.view">
+            <field name="name">Comprobantes Anulados form view</field>
+            <field name="model">l10n_ec_sri.comprobantesanulados</field>
+            <field name="arch" type="xml">
+                <form string="Comprobantes anualdos.">
+                    <sheet>
+                        <group string="Comprobantes anulados" name="anulados" >
+                            <field name="fecha"/>
+                            <field name="comprobante_id" widget="selection" />
+                            <field name="autorizacion_id"
+                                   widget="selection"
+                                   attrs="{'readonly':[('comprobante_id', '==', False)]}"
+                                   domain="[('comprobante_id', '=', comprobante_id)]" />
+                            <field name="autorizacion"/>
+                            <field name="secuencialinicio"/>
+                            <field name="secuencialfin"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_comprobantesanulados_tree" model="ir.ui.view">
+            <field name="name">Comprobantes Anulados tree view</field>
+            <field name="model">l10n_ec_sri.comprobantesanulados</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" >
+                    <field name="fecha"/>
+                    <field name="comprobante_id" widget="selection"/>
+                    <field name="autorizacion_id"
+                           widget="selection"
+                           attrs="{'readonly':[('comprobante_id', '==', False)]}"
+                           domain="[('comprobante_id', '=', comprobante_id)]"/>
+                    <field name="autorizacion"/>
+                    <field name="secuencialinicio"/>
+                    <field name="secuencialfin"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_comprobantesanulados_search" model="ir.ui.view">
+            <field name="name">Comprobantes anulados search view</field>
+            <field name="model">l10n_ec_sri.comprobantesanulados</field>
+            <field name="arch" type="xml">
+                <search string="Comprobantes anulados">
+                    <field name="comprobante_id" widget="selection" />
+                    <field name="autorizacion_id" />
+                    <field name="secuencialinicio"/>
+                    <field name="secuencialfin"/>
+                    <field name="fecha"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_comprobantesanulados">
+            <field name="name">Comprobantes anulados</field>
+            <field name="res_model">l10n_ec_sri.comprobantesanulados</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Ingrese sus comprobantes anualdos.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

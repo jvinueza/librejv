@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PARTE DEL PROYECTO LIBREGOB -->
+<!-- LICENCIA AGPL-v3 -->
+<odoo>
+
+    <record id="res_country_sri_form_view" model="ir.ui.view">
+        <field name="name">res.country.form.view</field>
+        <field name="model">res.country</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form string="Países">
+                <group>
+                    <field name="name" readonly="1"/>
+                </group>
+                <group string="Configuraciones para el SRI">
+                    <field name="tiporegi"/>
+                    <field name="aplicconvdobtrib"/>
+                    <field name="codigo"/>
+                    <field name="denopago"/>
+                    <field name="pagextsujretnorleg"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_res_country_sri" model="ir.actions.act_window">
+        <field name="name">Res country sri SRI form</field>
+        <field name="res_model">res.country</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="base.view_country_tree"/>
+        <field name="context">{'form_view_ref': 'l10n_ec_sri.res_country_sri_form_view'}</field>
+    </record>
+
+    <menuitem
+        name="Países"
+        action="action_res_country_sri"
+        id="menu_country_sri"
+        parent="menu_sri_settings"
+        sequence="1"
+        />
+
+</odoo>

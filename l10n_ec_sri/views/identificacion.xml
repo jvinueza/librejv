@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+    <record id="view_identificacion_form" model="ir.ui.view">
+      <field name="name">view.identificacion.form</field>
+      <field name="model">l10n_ec_sri.identificacion</field>
+      <field name="arch" type="xml">
+        <form string="Tipo de identificacion.">
+          <sheet>
+            <group string="Informacion general">
+              <field name="name"/>
+              <field name="code"/>
+              <field name="description"/>
+            </group>
+            <group string="Codigos del Anexo Transaccional">
+              <field name="tpidprov"/>
+              <field name="tpidcliente"/>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+  </data>
+</odoo>

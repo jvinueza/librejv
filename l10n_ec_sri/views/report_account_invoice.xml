@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- FORMULARIO 104 -->
+        <report
+            id="f104_report_id"
+            model="l10n_ec_sri.f104"
+            string="Formulario 104"
+            name="l10n_ec_sri.f104_report"
+            file="104"
+            report_type="qweb-pdf" />
+
+        <template id="f104_report">
+            <t t-call="report.html_container">
+                <t t-call="report.external_layout">
+                    <t t-foreach="docs" t-as="doc">
+                        <div class="page">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td >
+                                        </td>
+                                        <td >
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

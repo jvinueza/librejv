@@ -1,0 +1,6 @@
+"id","name","code","description","tpidprov","tpidcliente","active"
+"identificacion_ruc","R.U.C.","R","Registro único de contribuyentes","01","04",1
+"identificacion_ci","C.I.","C","Cédula de identidad (ecuatorianos)","02","05",1
+"identificacion_pas","Pasaporte","P","Pasaporte","03","06",1
+"identificacion_ext","Identificación fiscal del exterior","P","Identificación fiscal del exterior","03","06",1
+"identificacion_fin","Consumidor final","F","Consumidor final",,"07",1

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+
+<record id="view_account_journal_form_ec" model="ir.ui.view">
+  <field name="name">Account Journal Ecuadorian Form</field>
+  <field name="model">account.journal</field>
+  <field name="inherit_id" ref="account.view_account_journal_form" />
+  <field name="arch" type="xml">
+    <xpath expr="//field[@name='type']" position="after">
+        <field name="formapago_id"
+               widget="selection"
+               options="{'no_quick_create':True, 'no_create_edit':True}"
+               attrs="{'invisible':[('type', 'not in', ('cash', 'bank', 'sale'))]}"/>
+    </xpath>
+  </field>
+</record>
+
+  </data>
+</odoo>
