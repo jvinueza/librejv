@@ -10,7 +10,7 @@
     'category': 'Account',
     'depends': [
         'base',
-        'bi_base',
+        #'bi_base',
         'account',
         'account_tax_python',
         'account_invoice_refund_link',
